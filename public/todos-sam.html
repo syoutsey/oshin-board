@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Cache-control" content="no-cache" />
+	<title>Todos</title>
+	<style type="text/css">
+		@font-face {
+			font-family: "Roadgeek2005SeriesD";
+			src: url("http://panic.com/fonts/Roadgeek 2005 Series D/Roadgeek 2005 Series D.otf");
+		}
+		body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+			margin: 0;
+			padding: 0;
+		}
+		fieldset,img {
+			border: 0;
+		}
+		#main{
+			overflow: hidden;
+		}
+		body {
+			font-family: 'Roadgeek2005SeriesD', sans-serif;
+			color: white;
+		}
+		body, html, #main
+		{
+			background: transparent !important;
+		}
+		#todos_container {
+			padding: 16px;
+			text-align: center;
+		}
+		h2 {
+			width: 180px;
+			margin: 0px auto;
+			padding-bottom: 16px;
+			font-size: 24px;
+			font-weight: normal;
+			line-height: 24px;
+			color: #ace1fa;
+			text-transform: uppercase;
+		}
+		.todo {
+			margin-bottom: 4px;
+			padding-left: 10px;
+		}
+		li {
+			list-style-type: circle;
+			color: #ace1fa;
+
+			font-size: 18px;
+			line-height: 1.4;
+			font-weight: normal;
+			text-align: left;
+		}
+	</style>
+	<script type="text/javascript">
+		function refresh()
+		{
+		    var req = new XMLHttpRequest();
+	   	 	console.log("Refreshing Count...");
+			
+	        req.onreadystatechange=function() {
+	          if (req.readyState == 4 && req.status == 200)
+	          {
+	          	var resp = JSON.parse(req.responseText);
+				var name = resp.name;
+	          	var html = '<h2>' + name + '</h2>';
+	          	html += '<ul>'
+	          	resp.todos.forEach(function(todo) {
+	          		html += '<span class="todo">';
+	          		html += '<li>' + todo.title + ' </li>';
+	          		html += '</span>';
+				});
+				html += '</ul>';
+	          	
+	          	document.getElementById('todos_container').innerHTML = html;
+	          }
+	        }
+		    req.open("GET", 'todosperson?person=sam', true);
+		    req.send(null);
+		}
+
+		function init()
+		{
+			// Change page background to black if the URL contains "?desktop", for debugging while developing on your computer
+			if (document.location.href.indexOf('desktop') > -1)
+			{
+				document.getElementById('todos_container').style.backgroundColor = 'black';
+			}
+			
+			refresh()
+			var int=self.setInterval(function(){refresh()},60000); //update once a minute
+		}
+	</script>
+</head>
+<body onload="init()">
+	<div id="main">
+		<div id="todos_container">
+			
+		</div>
+	</div>
+</body>
+</html>
